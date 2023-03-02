@@ -25,7 +25,7 @@ FROM registry.access.redhat.com/ubi8/nodejs-18-minimal
 
 WORKDIR /usr/src/app
 
-COPY --chown=1001:1001 --from=build /usr/src/app/build/ build/
+COPY --chown=1001:1001 --from=build /usr/src/app/dist/ dist/
 COPY --chown=1001:1001 --from=deps /usr/src/app/package*.json/ .
 COPY --chown=1001:1001 --from=deps /usr/src/app/node_modules/ node_modules/
 
@@ -34,4 +34,4 @@ COPY --chown=1001:1001 --from=deps /usr/src/app/node_modules/ node_modules/
 ENV FASTIFY_PORT=8080
 ENV FASTIFY_ADDRESS=0.0.0.0
 
-CMD [ "./node_modules/.bin/fastify", "start", "-l", "info", "app.js" ]
+CMD [ "./node_modules/.bin/fastify", "start", "-l", "info", "dist/app.js" ]
