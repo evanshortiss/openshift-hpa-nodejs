@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
   labels:
     app: hpa-nodejs
+    app.kubernetes.io/name: nodejs
   name: hpa-nodejs
 spec:
   replicas: 1
@@ -18,7 +19,13 @@ spec:
       - image: image-registry.openshift-image-registry.svc:5000/hpa-nodejs/hpa-nodejs
         imagePullPolicy: Always
         name: hpa-nodejs
-        resources: {}
+        resources:
+          requests:
+            memory: 50Mi
+            cpu: 100m
+          limits:
+            memory: 250Mi
+            cpu: 1000m
         livenessProbe:
           httpGet:
             path: /probes/liveness

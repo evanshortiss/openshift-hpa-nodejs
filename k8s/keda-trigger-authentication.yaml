@@ -1,0 +1,13 @@
+apiVersion: keda.sh/v1alpha1
+kind: TriggerAuthentication
+metadata:
+  name: keda-trigger-auth-prometheus
+  namespace: hpa-nodejs
+spec:
+  secretTargetRef: 
+  - parameter: bearerToken 
+    name: thanos-token-f88g7 
+    key: token 
+  - parameter: ca
+    name: thanos-token-f88g7
+    key: ca.crt

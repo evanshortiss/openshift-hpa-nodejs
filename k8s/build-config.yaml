@@ -1,0 +1,39 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  annotations:
+    app.openshift.io/vcs-ref: main
+    app.openshift.io/vcs-uri: https://github.com/evanshortiss/openshift-hpa-nodejs
+    openshift.io/generated-by: OpenShiftWebConsole
+  labels:
+    app: hpa-nodejs
+    app.kubernetes.io/component: hpa-nodejs
+    app.kubernetes.io/instance: hpa-nodejs
+    app.kubernetes.io/name: hpa-nodejs
+    app.openshift.io/runtime: nodejs
+    app.openshift.io/runtime-version: 18-ubi8
+  name: hpa-nodejs
+  namespace: hpa-nodejs
+spec:
+  failedBuildsHistoryLimit: 5
+  nodeSelector: null
+  output:
+    to:
+      kind: ImageStreamTag
+      name: hpa-nodejs:latest
+  postCommit: {}
+  resources: {}
+  runPolicy: Serial
+  source:
+    contextDir: /
+    git:
+      ref: main
+      uri: https://github.com/evanshortiss/openshift-hpa-nodejs
+    type: Git
+  strategy:
+    dockerStrategy:
+      dockerfilePath: Containerfile
+    type: Docker
+  successfulBuildsHistoryLimit: 5
+  triggers:
+  - type: ConfigChange
