@@ -1,0 +1,14 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    k8s-app: hpa-nodejs-monitor
+  name: hpa-nodejs-monitor
+spec:
+  endpoints:
+  - interval: 3s
+    port: web
+    scheme: http
+  selector:
+    matchLabels:
+      app: hpa-nodejs

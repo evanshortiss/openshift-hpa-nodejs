@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: hpa-nodejs
+  name: hpa-nodejs
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hpa-nodejs
+  template:
+    metadata:
+      labels:
+        app: hpa-nodejs
+    spec:
+      containers:
+      - image: image-registry.openshift-image-registry.svc:5000/hpa-nodejs/hpa-nodejs
+        imagePullPolicy: Always
+        name: hpa-nodejs
+        resources: {}
+        livenessProbe:
+          httpGet:
+            path: /probes/liveness
+            port: 8080
+            scheme: HTTP
+          timeoutSeconds: 1
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /probes/readiness
+            port: 8080
+            scheme: HTTP
+          timeoutSeconds: 1
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 3
