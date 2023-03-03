@@ -1,8 +1,9 @@
 import { from } from 'env-var'
-import * as prometheus from 'prom-client'
 
 export type ApplicationConfiguration = {
-  prometheus: prometheus.DefaultMetricsCollectorConfiguration
+  prometheus: {
+    eluSampleInterval: number
+  }
 }
 
 export default function getConfig (env: NodeJS.ProcessEnv): ApplicationConfiguration {
@@ -10,7 +11,7 @@ export default function getConfig (env: NodeJS.ProcessEnv): ApplicationConfigura
 
   return {
     prometheus: {
-      eventLoopMonitoringPrecision: get('EVENT_LOOP_MONITORING_PRECISION').default(10).asIntPositive()
+      eluSampleInterval: get('ELU_SAMPLE_INTERVAL').default(100).asIntPositive()
     }
   }
 }
