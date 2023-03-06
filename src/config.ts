@@ -2,7 +2,7 @@ import { from } from 'env-var'
 
 export type ApplicationConfiguration = {
   prometheus: {
-    eluSampleInterval: number
+    eventLoopMonitoringPrecision?: number
   }
 }
 
@@ -11,7 +11,7 @@ export default function getConfig (env: NodeJS.ProcessEnv): ApplicationConfigura
 
   return {
     prometheus: {
-      eluSampleInterval: get('ELU_SAMPLE_INTERVAL').default(100).asIntPositive()
+      eventLoopMonitoringPrecision: get('PROM_EL_MONITOR_PRECISION').asIntPositive()
     }
   }
 }
