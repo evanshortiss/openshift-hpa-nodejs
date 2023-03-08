@@ -1,4 +1,5 @@
 import { FastifyPluginAsync } from 'fastify'
+import { hostname } from 'os'
 
 /**
  * Basic readiness and liveness probe implementation for Kubernetes.
@@ -10,17 +11,17 @@ const metrics: FastifyPluginAsync = async (fastify): Promise<void> => {
 
   fastify.get('/probes/readiness', (request, reply) => {
     if (!ready) {
-      reply.internalServerError('something is wrong with the application')
+      reply.internalServerError(`${hostname}: something is wrong with the application`)
     } else {
-      reply.send('ok')
+      reply.send(`${hostname()}: ok`)
     }
   })
 
   fastify.get('/probes/liveness', (request, reply) => {
     if (!alive) {
-      reply.internalServerError('something is wrong with the application')
+      reply.internalServerError(`${hostname}: something is wrong with the application`)
     } else {
-      reply.send('ok')
+      reply.send(`${hostname()}: ok`)
     }
   })
 
