@@ -6,7 +6,7 @@ metadata:
   name: hpa-nodejs-monitor
 spec:
   endpoints:
-  - interval: 3s
+  - interval: 10s
     port: web
     scheme: http
   selector:

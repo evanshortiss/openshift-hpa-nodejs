@@ -36,7 +36,6 @@ const app: FastifyPluginAsync<AppOptions> = async (
     dir: join(__dirname, 'routes'),
     options: Object.assign(options, opts)
   })
-
 };
 
 export default app;

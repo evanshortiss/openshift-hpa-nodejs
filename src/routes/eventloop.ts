@@ -15,13 +15,22 @@ const metrics: FastifyPluginAsyncTypebox = async (fastify): Promise<void> => {
           }),
       })
     },
-  }, (request) => {
+  }, async (request) => {
     const { time } = request.query
-    const blockUntil = Date.now() + time
 
-    while (Date.now() < blockUntil) {}
+    return new Promise((resolve) => {
+      const blockUntil = Date.now() + time
+      while (Date.now() < blockUntil) {}
 
-    return `Finished blocking for ${time}ms`
+      resolve(`Finished blocking for ${time}ms`)
+    })
+  })
+
+  fastify.get('/eventloop/random', () => {
+    return new Promise((resolve) => {
+      const time = Math.random() * 50
+      setTimeout(() => resolve(`Responded after ${time}ms`), time)
+    })
   })
 }
 

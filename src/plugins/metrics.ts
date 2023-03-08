@@ -7,4 +7,15 @@ export default fp<AppOptions>(async (fastify, opts) => {
   prometheus.collectDefaultMetrics({
     eventLoopMonitoringPrecision: opts.config.prometheus.eventLoopMonitoringPrecision
   });
+
+  const responseTimeMetric = new prometheus.Summary({
+    name: 'response_time',
+    help: 'response time of requests being processed',
+    maxAgeSeconds: 60,
+    ageBuckets: 5
+  })
+
+  fastify.addHook('onResponse', (request, response) => {
+    responseTimeMetric.observe(response.getResponseTime())
+  })
 })
