@@ -26,10 +26,10 @@ const metrics: FastifyPluginAsyncTypebox = async (fastify): Promise<void> => {
     })
   })
 
-  fastify.get('/eventloop/random', () => {
+  fastify.get('/eventloop/block/random', () => {
     const sTime = Date.now()
     return new Promise((resolve) => {
-      const pTime = Math.max(Math.random() * 50, 10)
+      const pTime = Math.max(Math.random() * 60, 20)
       setTimeout(
         () => resolve(`Processing time: ${pTime}. Real time: ${Date.now() - sTime}ms`),
         pTime
