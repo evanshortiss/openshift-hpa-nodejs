@@ -1,12 +1,9 @@
 import fp from 'fastify-plugin'
 import * as prometheus from 'prom-client'
-import { AppOptions } from '../app';
 
-export default fp<AppOptions>(async (fastify, opts) => {
+export default fp(async (fastify) => {
   // Instruct the prometheus client to collect default Node.js process metrics
-  prometheus.collectDefaultMetrics({
-    eventLoopMonitoringPrecision: opts.config.prometheus.eventLoopMonitoringPrecision
-  });
+  prometheus.collectDefaultMetrics({});
 
   const responseTimeMetric = new prometheus.Summary({
     name: 'response_time',

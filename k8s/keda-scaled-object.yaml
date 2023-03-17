@@ -6,8 +6,8 @@ metadata:
 spec:
   scaleTargetRef:
     name: hpa-nodejs
-    kind: Deployment 
-  cooldownPeriod: 60
+    kind: Deployment
+  cooldownPeriod: 120
   maxReplicaCount: 10
   minReplicaCount: 1
   pollingInterval: 10 
@@ -16,11 +16,11 @@ spec:
     horizontalPodAutoscalerConfig:
       behavior: 
         scaleDown:
-          stabilizationWindowSeconds: 60
+          stabilizationWindowSeconds: 120
           policies:
           - type: Percent
-            value: 100
-            periodSeconds: 15
+            value: 20
+            periodSeconds: 60
   triggers:
   - type: prometheus 
     metadata:

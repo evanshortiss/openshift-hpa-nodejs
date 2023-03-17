@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "This project was bootstrapped with Fastify-CLI.",
   "main": "app.ts",
+  "bin": "./node_modules/.bin/fastify",
   "directories": {
     "test": "test"
   },
@@ -26,11 +27,13 @@
     "fastify": "^4.0.0",
     "fastify-cli": "^5.7.1",
     "fastify-plugin": "^4.0.0",
-    "prom-client": "^14.1.1"
+    "prom-client": "^14.1.1",
+    "workerpool": "^6.4.0"
   },
   "devDependencies": {
     "@types/node": "^18.0.0",
     "@types/tap": "^15.0.5",
+    "@types/workerpool": "^6.4.0",
     "concurrently": "^7.0.0",
     "fastify-tsconfig": "^1.0.1",
     "tap": "^16.1.0",

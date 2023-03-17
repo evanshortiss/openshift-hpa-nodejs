@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Template
+
+parameters:
+  - name: TOKEN_SECRET_NAME
+    required: true
+
+objects:
+  - apiVersion: keda.sh/v1alpha1
+    kind: TriggerAuthentication
+    metadata:
+      name: keda-trigger-auth-prometheus
+      namespace: hpa-nodejs
+    spec:
+      secretTargetRef: 
+      - parameter: bearerToken 
+        name: ${TOKEN_SECRET_NAME}
+        key: token 
+      - parameter: ca
+        name: ${TOKEN_SECRET_NAME}
+        key: ca.crt

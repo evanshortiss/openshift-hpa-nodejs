@@ -1,11 +1,15 @@
 import { Type } from '@sinclair/typebox'
 import { FastifyPluginAsyncTypebox } from '@fastify/type-provider-typebox'
+import { runBlockingWorkload } from '../blocker'
+import { AppOptions } from '../config'
 
 /**
  * Basic readiness and liveness probe implementation for Kubernetes.
  * @param fastify 
  */
-const metrics: FastifyPluginAsyncTypebox = async (fastify): Promise<void> => {
+const metrics: FastifyPluginAsyncTypebox<AppOptions> = async (fastify, options): Promise<void> => {
+  const { USE_THREADS} = options.config
+
   fastify.get('/eventloop/block', {
     schema: {
       querystring: Type.Object({
@@ -16,25 +20,11 @@ const metrics: FastifyPluginAsyncTypebox = async (fastify): Promise<void> => {
       })
     },
   }, async (request) => {
-    const { time } = request.query
-
-    return new Promise((resolve) => {
-      const blockUntil = Date.now() + time
-      while (Date.now() < blockUntil) {}
-
-      resolve(`Finished blocking for ${time}ms`)
-    })
+    return runBlockingWorkload(USE_THREADS, fastify.log, request.query.time)
   })
 
   fastify.get('/eventloop/block/random', () => {
-    const sTime = Date.now()
-    return new Promise((resolve) => {
-      const pTime = Math.max(Math.random() * 60, 20)
-      setTimeout(
-        () => resolve(`Processing time: ${pTime}. Real time: ${Date.now() - sTime}ms`),
-        pTime
-      )
-    })
+    return runBlockingWorkload(USE_THREADS, fastify.log, Math.round(Math.max(Math.random() * 60, 30)))
   })
 }
 

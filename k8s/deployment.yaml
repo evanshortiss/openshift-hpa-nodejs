@@ -16,7 +16,7 @@ spec:
         app: hpa-nodejs
     spec:
       containers:
-      - image: image-registry.openshift-image-registry.svc:5000/hpa-nodejs/hpa-nodejs
+      - image: image-registry.openshift-image-registry.svc:5000/hpa-nodejs/hpa-nodejs:latest
         imagePullPolicy: Always
         name: hpa-nodejs
         resources:

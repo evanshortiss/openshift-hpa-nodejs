@@ -1,17 +1,21 @@
+import { AutoloadPluginOptions } from '@fastify/autoload';
 import { from } from 'env-var'
 
-export type ApplicationConfiguration = {
-  prometheus: {
-    eventLoopMonitoringPrecision?: number
-  }
+export type ApplicationEnvironment = 'development'|'production'
+
+export type AppEnvionmentVariables = {
+  USE_THREADS: boolean
 }
 
-export default function getConfig (env: NodeJS.ProcessEnv): ApplicationConfiguration {
-  const { get } = from(env)
+export type AppOptions = {
+  // Place your custom options for app below here.
+  config: AppEnvionmentVariables
+} & Partial<AutoloadPluginOptions>;
 
+export function getConfig (env: NodeJS.ProcessEnv): AppEnvionmentVariables {
+  const { get } = from(env)
+  
   return {
-    prometheus: {
-      eventLoopMonitoringPrecision: get('PROM_EL_MONITOR_PRECISION').asIntPositive()
-    }
+    USE_THREADS: get('USE_THREADS').default('false').asBool()
   }
 }

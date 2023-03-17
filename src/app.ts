@@ -1,19 +1,11 @@
 import { join } from 'path';
-import AutoLoad, {AutoloadPluginOptions} from '@fastify/autoload';
+import AutoLoad from '@fastify/autoload';
 import { FastifyPluginAsync } from 'fastify';
-import getConfig, { ApplicationConfiguration } from './config';
+import { AppOptions, getConfig } from './config';
 
-export type AppOptions = {
-  // Place your custom options for app below here.
-  config: ApplicationConfiguration
-} & Partial<AutoloadPluginOptions>;
-
-// Configuration from environment
-const config = getConfig(process.env)
 
 // Pass --options via CLI arguments in command to enable these options.
-const options: AppOptions = {
-  config
+const options: Partial<AppOptions> = {
 }
 
 const app: FastifyPluginAsync<AppOptions> = async (
@@ -21,20 +13,21 @@ const app: FastifyPluginAsync<AppOptions> = async (
     opts
 ): Promise<void> => {
   // Do not touch the following lines
+  const config = getConfig(process.env)
 
   // This loads all plugins defined in plugins
   // those should be support plugins that are reused
   // through your application
   void fastify.register(AutoLoad, {
     dir: join(__dirname, 'plugins'),
-    options: Object.assign(options, opts)
+    options: {...options, ...opts, config: {...config } }
   })
 
   // This loads all plugins defined in routes
   // define your routes in one of these
   void fastify.register(AutoLoad, {
     dir: join(__dirname, 'routes'),
-    options: Object.assign(options, opts)
+    options: {...options, ...opts, config: {...config } }
   })
 };
 
