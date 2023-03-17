@@ -37,10 +37,12 @@ export async function runBlockingWorkload (threaded: boolean, logger: FastifyBas
   } else {
     return new Promise((resolve) => {
       setTimeout(() => {
+        const actual = blockingFn(time)
         resolve({
           real: `${Date.now() - sTime}ms`,
           requested: `${time}ms`,
-          actual: `${blockingFn(time)}ms` })
+          actual: `${actual}ms`
+        })
       })
     })
   }
