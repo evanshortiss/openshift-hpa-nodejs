@@ -23,7 +23,8 @@ export async function runBlockingWorkload (threaded: boolean, logger: FastifyBas
         workerType: 'thread',
         minWorkers: cpus().length - 1,
         workerTerminateTimeout: 60000,
-        onCreateWorker: () => logger.info('🧵 worker created')
+        onCreateWorker: () => logger.info('🧵 worker created'),
+        onTerminateWorker: () => logger.info('🧵 worker... terminated 🤖')
       })
     }
 
@@ -36,7 +37,7 @@ export async function runBlockingWorkload (threaded: boolean, logger: FastifyBas
     }
   } else {
     return new Promise((resolve) => {
-      setTimeout(() => {
+      setImmediate(() => {
         const actual = blockingFn(time)
         resolve({
           real: `${Date.now() - sTime}ms`,

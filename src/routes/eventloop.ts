@@ -19,7 +19,7 @@ const metrics: FastifyPluginAsyncTypebox<AppOptions> = async (fastify, options):
           }),
       })
     },
-  }, async (request) => {
+  }, (request) => {
     return runBlockingWorkload(USE_THREADS, fastify.log, request.query.time)
   })
 
