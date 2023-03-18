@@ -9,10 +9,10 @@ spec:
     kind: Deployment
   cooldownPeriod: 120
   maxReplicaCount: 10
-  minReplicaCount: 1
-  pollingInterval: 10 
+  minReplicaCount: 2
+  pollingInterval: 5 
   advanced:
-    restoreToOriginalReplicaCount: false 
+    restoreToOriginalReplicaCount: true 
     horizontalPodAutoscalerConfig:
       behavior: 
         scaleDown:
@@ -29,7 +29,7 @@ spec:
       metricName: nodejs_eventloop_lag_mean_seconds
       name: nodejs_eventloop_lag_mean_seconds
       # If mean event loop lag is above 40 milliseconds, scale up!
-      threshold: '40'
+      threshold: '30'
       query: avg(nodejs_eventloop_lag_mean_seconds)*1000
       authModes: "bearer"
     authenticationRef: 
