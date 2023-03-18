@@ -6,7 +6,7 @@ metadata:
     app.kubernetes.io/name: nodejs
   name: hpa-nodejs
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: hpa-nodejs
@@ -19,13 +19,17 @@ spec:
       - image: image-registry.openshift-image-registry.svc:5000/hpa-nodejs/hpa-nodejs:latest
         imagePullPolicy: Always
         name: hpa-nodejs
+        env:
+          - name: FASTIFY_CLOSE_GRACE_DELAY
+            value: '10000'
+          - name: USE_THREADS
+            value: 'false'
         resources:
           requests:
             memory: 50Mi
-            cpu: 100m
+            cpu: 200m
           limits:
             memory: 250Mi
-            cpu: 1000m
         livenessProbe:
           httpGet:
             path: /probes/liveness
