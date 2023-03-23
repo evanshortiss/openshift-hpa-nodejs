@@ -15,7 +15,7 @@ const metrics: FastifyPluginAsyncTypebox<AppOptions> = async (fastify, options):
       querystring: Type.Object({
           time: Type.Number({
             minimum: 1,
-            maximum: 999
+            maximum: 60 * 1000 // 1 minute 
           }),
       })
     },
@@ -24,7 +24,7 @@ const metrics: FastifyPluginAsyncTypebox<AppOptions> = async (fastify, options):
   })
 
   fastify.get('/eventloop/block/random', () => {
-    return runBlockingWorkload(USE_THREADS, fastify.log, Math.round(Math.max(Math.random() * 60, 30)))
+    return runBlockingWorkload(USE_THREADS, fastify.log, Math.round(Math.max(Math.random() * 50, 25)))
   })
 }
 
