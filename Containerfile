@@ -34,7 +34,8 @@ ENV NODE_ENV=production
 ENV FASTIFY_PORT 8080
 ENV FASTIFY_ADDRESS 0.0.0.0
 ENV FASTIFY_CLOSE_GRACE_DELAY=5000
+ENV FASTIFY_LOG_LEVEL=info
 
 EXPOSE 8080
 
-CMD [ "./node_modules/.bin/fastify", "start", "-l", "info", "dist/app.js" ]
+CMD [ "./node_modules/.bin/fastify", "start", "dist/app.js" ]
