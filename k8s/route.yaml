@@ -1,0 +1,18 @@
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: hpa-nodejs
+  namespace: hpa-nodejs
+  labels:
+    app: hpa-nodejs
+spec:
+  to:
+    kind: Service
+    name: hpa-nodejs
+    weight: 100
+  port:
+    targetPort: web
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+  wildcardPolicy: None
