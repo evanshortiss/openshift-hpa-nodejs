@@ -8,7 +8,7 @@ import { AppOptions } from '../config'
  * @param fastify 
  */
 const metrics: FastifyPluginAsyncTypebox<AppOptions> = async (fastify, options): Promise<void> => {
-  const { USE_THREADS} = options.config
+  const { USE_THREADS, MAX_THREADS } = options.config
 
   fastify.get('/eventloop/block', {
     schema: {
@@ -20,11 +20,11 @@ const metrics: FastifyPluginAsyncTypebox<AppOptions> = async (fastify, options):
       })
     },
   }, (request) => {
-    return runBlockingWorkload(USE_THREADS, fastify.log, request.query.time)
+    return runBlockingWorkload({ useThreads: USE_THREADS, maxThreads: MAX_THREADS }, fastify.log, request.query.time)
   })
 
   fastify.get('/eventloop/block/random', () => {
-    return runBlockingWorkload(USE_THREADS, fastify.log, Math.round(Math.max(Math.random() * 50, 25)))
+    return runBlockingWorkload({ useThreads: USE_THREADS, maxThreads: MAX_THREADS }, fastify.log, Math.round(Math.max(Math.random() * 50, 25)))
   })
 }
 

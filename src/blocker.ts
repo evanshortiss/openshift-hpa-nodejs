@@ -13,16 +13,20 @@ function blockingFn (ms: number): number {
   return Date.now() - start
 }
 
-export async function runBlockingWorkload (threaded: boolean, logger: FastifyBaseLogger, time: number): Promise<{ real: string, requested: string, actual: string }> {
-
+export async function runBlockingWorkload (
+  cfg: { useThreads: boolean, maxThreads?: number },
+  logger: FastifyBaseLogger,
+  time: number): Promise<{ real: string, requested: string, actual: string }> {
+  
+  const { useThreads, maxThreads } = cfg
   const sTime = Date.now()
   
-  if (threaded) {
+  if (useThreads) {
     if (!mypool) {
       mypool = createPool({
         workerType: 'thread',
-        minWorkers: cpus().length - 1,
         workerTerminateTimeout: 60000,
+        maxWorkers: maxThreads ? maxThreads : cpus().length / 2,
         onCreateWorker: () => logger.info('🧵 worker created'),
         onTerminateWorker: () => logger.info('🧵 worker... terminated 🤖')
       })

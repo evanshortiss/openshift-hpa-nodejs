@@ -5,6 +5,7 @@ export type ApplicationEnvironment = 'development'|'production'
 
 export type AppEnvionmentVariables = {
   USE_THREADS: boolean
+  MAX_THREADS?: number
 }
 
 export type AppOptions = {
@@ -16,6 +17,7 @@ export function getConfig (env: NodeJS.ProcessEnv): AppEnvionmentVariables {
   const { get } = from(env)
   
   return {
-    USE_THREADS: get('USE_THREADS').default('false').asBool()
+    USE_THREADS: get('USE_THREADS').default('false').asBool(),
+    MAX_THREADS: get('MAX_THREADS').asIntPositive(),
   }
 }
