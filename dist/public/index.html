@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Evan's DevNexus 2023 Session</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@1.*/css/pico.min.css">
+
+    <style>
+      h1, p {
+        text-align: center;
+      }
+      button {
+        max-width: 50vw;
+        margin: 0 auto;
+      }
+      ol, ul, li {
+        list-style: none;
+        text-align: center;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="container">
+
+      <h1>Hello, Dev Nexus!</h1>
+      <p>Want a cookie? I can bake a fresh one in 100 milliseconds, or reheat a pre-baked one in 5 milliseconds!</p>
+      <p>The times below show how it took to prepare your cookie, how long the server took to receive and process the request, plus the overall request time from the moment you requested a cookie until you received it (including network latency).</p>
+      <button class="cookie-btn" onclick="getCookie(100, '🔥🍪')">🍪🔥 Make me a fresh-baked cookie 🔥🍪</button>
+      <br>
+      <button class="cookie-btn" onclick="getCookie(5, '🍪')">🍪 Reheat a pre-baked cookie 🍪</button>
+      <hr style="margin: 1em;">
+      <p>Bake / Processing / Overall</p>
+      <ol id="cookie-list"></ol>
+    </main>
+
+    <script>
+      const cookieBtns = Array.from(document.getElementsByClassName('cookie-btn'))
+      const cookieList = document.getElementById('cookie-list')
+      
+      async function getCookie (time, type) {
+        const oldText = []
+        cookieBtns.forEach(btn => btn.setAttribute('aria-busy', 'true'))
+        cookieBtns.forEach(btn => {
+          oldText.push(btn.innerHTML)
+          btn.innerHTML = 'Getting your cookie'
+        })
+
+        try {
+          const start = Date.now()
+          const result = await fetch(`/eventloop/block?time=${time}`)
+          const { bakeTime, processing } = await result.json()
+          const realTime = Date.now() - start
+          const li = document.createElement('li')
+          cookieList.prepend(li)
+
+          li.innerHTML = `${type} <small>${bakeTime}ms / ${Math.round(processing)}ms / ${realTime}ms</small> ${type}`
+        } catch (e) {
+          alert('error making cookie')
+          console.error(e)
+        } finally {
+          cookieBtns.forEach(btn => btn.setAttribute('aria-busy', 'false'))
+          cookieBtns.forEach((btn) => {
+            btn.innerHTML = oldText.shift()
+          })
+        }
+      }
+    </script>
+  </body>
+</html>
