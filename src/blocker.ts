@@ -4,19 +4,25 @@ import { pool as createPool, WorkerPool } from 'workerpool'
 
 let mypool!: WorkerPool
 
-function blockingFn (ms: number): number {
-  const start = Date.now()
-  const blockUntil = start + ms
-
-  while (Date.now() < blockUntil) {}
-
-  return Date.now() - start
+async function blockingFnWithIo (ms: number): Promise<void> {
+  const ioTime = Math.ceil(ms * 0.1)
+  const processingTime = Math.round(ms * 0.9)
+  
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      const blockUntil = Date.now() + processingTime
+      
+      while (Date.now() < blockUntil) {}
+      
+      resolve()
+    }, ioTime)
+  })
 }
 
 export async function runBlockingWorkload (
   cfg: { useThreads: boolean, maxThreads?: number },
   logger: FastifyBaseLogger,
-  time: number): Promise<{ real: string, requested: string, actual: string }> {
+  time: number): Promise<number> {
   
   const { useThreads, maxThreads } = cfg
   const sTime = Date.now()
@@ -32,24 +38,13 @@ export async function runBlockingWorkload (
       })
     }
 
-    const actual = await mypool.exec(blockingFn, [time])
+    await mypool.exec(blockingFnWithIo, [time])
     
-    return {
-      real: `${Date.now() - sTime}ms`,
-      requested: `${time}ms`,
-      actual: `${actual}ms`
-    }
+    return Date.now() - sTime
   } else {
-    return new Promise((resolve) => {
-      setImmediate(() => {
-        const actual = blockingFn(time)
-        resolve({
-          real: `${Date.now() - sTime}ms`,
-          requested: `${time}ms`,
-          actual: `${actual}ms`
-        })
-      })
-    })
+    await blockingFnWithIo(time)
+
+    return Date.now() - sTime
   }
 }
 

@@ -19,12 +19,18 @@ const metrics: FastifyPluginAsyncTypebox<AppOptions> = async (fastify, options):
           }),
       })
     },
-  }, (request) => {
-    return runBlockingWorkload({ useThreads: USE_THREADS, maxThreads: MAX_THREADS }, fastify.log, request.query.time)
+  }, (request, response) => {
+    const bakeTime = request.query.time
+    return runBlockingWorkload({ useThreads: USE_THREADS, maxThreads: MAX_THREADS }, fastify.log, bakeTime).then(() => {
+      return { bakeTime, processing: response.getResponseTime()}
+    })
   })
 
-  fastify.get('/eventloop/block/random', () => {
-    return runBlockingWorkload({ useThreads: USE_THREADS, maxThreads: MAX_THREADS }, fastify.log, Math.round(Math.max(Math.random() * 50, 25)))
+  fastify.get('/eventloop/block/random', (request, response) => {
+    const bakeTime = Math.round(Math.max(Math.random() * 50, 25))
+    return runBlockingWorkload({ useThreads: USE_THREADS, maxThreads: MAX_THREADS }, fastify.log, bakeTime).then(() => {
+      return { bakeTime, processing: response.getResponseTime()}
+    })
   })
 }
 
