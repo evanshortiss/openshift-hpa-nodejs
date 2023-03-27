@@ -1,9 +1,8 @@
 import { FastifyPluginAsync } from 'fastify'
+import '@fastify/static'
 
-const root: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
-  fastify.get('/', async function (request, reply) {
-    return { root: true }
-  })
+const root: FastifyPluginAsync = async (fastify): Promise<void> => {
+  fastify.get('/', (request, reply) => reply.sendFile('index.html'))
 }
 
 export default root;
