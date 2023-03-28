@@ -2,12 +2,6 @@ import fp from 'fastify-plugin'
 import up, { UnderPressureOptions } from '@fastify/under-pressure'
 import { AppOptions } from '../config'
 
-
-/**
- * This plugins adds some utilities to handle http errors
- *
- * @see https://github.com/fastify/fastify-sensible
- */
 export default fp<AppOptions>(async (fastify, options) => {
   const { MAX_EVENT_LOOP_DELAY, MAX_EVENT_LOOP_UTILIZATION } = options.config
   const opts: UnderPressureOptions = {
