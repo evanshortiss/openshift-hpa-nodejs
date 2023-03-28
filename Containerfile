@@ -10,8 +10,6 @@ COPY --chown=1001:1001 package*.json ./
 RUN npm ci
 COPY --chown=1001:1001 tsconfig*.json ./
 COPY --chown=1001:1001 src src
-COPY --chown=1001:1001 dist dist
-RUN ls dist
 RUN npm run build
 
 # Make a cached lightweight copy of node_modules
