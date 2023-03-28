@@ -4,18 +4,16 @@ import { pool as createPool, WorkerPool } from 'workerpool'
 
 let mypool!: WorkerPool
 
-async function blockingFnWithIo (ms: number): Promise<void> {
-  const ioTime = Math.ceil(ms * 0.1)
-  const processingTime = Math.round(ms * 0.9)
+async function blockingFn (ms: number): Promise<void> {
   
   return new Promise((resolve) => {
-    setTimeout(() => {
-      const blockUntil = Date.now() + processingTime
+    setImmediate(() => {
+      const blockUntil = Date.now() + ms
       
       while (Date.now() < blockUntil) {}
-      
+        
       resolve()
-    }, ioTime)
+    })
   })
 }
 
@@ -38,11 +36,11 @@ export async function runBlockingWorkload (
       })
     }
 
-    await mypool.exec(blockingFnWithIo, [time])
+    await mypool.exec(blockingFn, [time])
     
     return Date.now() - sTime
   } else {
-    await blockingFnWithIo(time)
+    await blockingFn(time)
 
     return Date.now() - sTime
   }
