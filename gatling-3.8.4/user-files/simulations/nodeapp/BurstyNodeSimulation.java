@@ -28,8 +28,8 @@ public class NodeSimulation extends Simulation {
     ChainBuilder getRandomBlocking = 
         repeat(2).on(
             exec(
-                http("GET /eventloop/block/random")
-                    .get("/eventloop/block/random")
+                http("GET /eventloop/block/?time=100")
+                    .get("/eventloop/block/?time=100")
                     .check(status().is(200))
             )
         );
@@ -52,7 +52,7 @@ public class NodeSimulation extends Simulation {
                 constantUsersPerSec(150).during(180)
          ),
          expensiveOpUsers.injectOpen(
-                constantUsersPerSec(50).during(180)
+                constantUsersPerSec(2).during(180)
                 //constantUsersPerSec(20).during(10),
                 //constantUsersPerSec(35).during(15)
          )
