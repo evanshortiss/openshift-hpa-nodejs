@@ -11,14 +11,8 @@ export default fp(async (fastify) => {
     name: 'response_time',
     help: 'response time of requests being processed',
     maxAgeSeconds: 60,
-    ageBuckets: 5
-  })
-
-  const randomBlockingResponseTimeMetric = new prometheus.Summary({
-    name: 'response_time_random_blocking',
-    help: 'response time of /eventloop/block/random',
-    maxAgeSeconds: 60,
-    ageBuckets: 5
+    ageBuckets: 5,
+    labelNames: ['url']
   })
 
   const eluMetric = new prometheus.Summary({
@@ -38,12 +32,8 @@ export default fp(async (fastify) => {
   }, 100).unref()
 
   fastify.addHook('onResponse', (request, response) => {
-    const rt = response.getResponseTime()
-
-    responseTimeMetric.observe(rt)
-
-    if (request.url.includes('eventloop/block/random')) {
-      randomBlockingResponseTimeMetric.observe(rt)
-    }
+    responseTimeMetric.observe({
+      url: request.url.split('?')[0]
+    }, response.getResponseTime())
   })
 })
