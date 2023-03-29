@@ -13,7 +13,7 @@ import io.gatling.javaapi.http.*;
  *   <li><a href="https://gatling.io/docs/gatling/tutorials/advanced">Gatling advanced tutorial</a>
  * </ul>
  */
-public class NodeSimulation extends Simulation {
+public class BurstyNodeSimulation extends Simulation {
 
 
     ChainBuilder getHome =
@@ -21,7 +21,6 @@ public class NodeSimulation extends Simulation {
             exec(
                 http("GET /")
                     .get("/")
-                    .check(status().is(200))
             )
         );
 
@@ -53,8 +52,6 @@ public class NodeSimulation extends Simulation {
          ),
          expensiveOpUsers.injectOpen(
                 constantUsersPerSec(2).during(180)
-                //constantUsersPerSec(20).during(10),
-                //constantUsersPerSec(35).during(15)
          )
         ).protocols(httpProtocol);
     }
