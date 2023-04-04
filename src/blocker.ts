@@ -5,7 +5,6 @@ import { pool as createPool, WorkerPool } from 'workerpool'
 let mypool!: WorkerPool
 
 async function blockingFn (ms: number): Promise<void> {
-  
   return new Promise((resolve) => {
     setImmediate(() => {
       const blockUntil = Date.now() + ms

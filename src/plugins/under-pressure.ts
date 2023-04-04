@@ -4,7 +4,7 @@ import { AppOptions } from '../config'
 
 export default fp<AppOptions>(async (fastify, options) => {
   const { MAX_EVENT_LOOP_DELAY, MAX_EVENT_LOOP_UTILIZATION, UNDER_PRESSURE_ENABLED } = options.config
-  
+
   if (UNDER_PRESSURE_ENABLED) {
     const opts: UnderPressureOptions = {
       maxEventLoopDelay: MAX_EVENT_LOOP_DELAY,
@@ -15,10 +15,11 @@ export default fp<AppOptions>(async (fastify, options) => {
           fastify.log.warn(`under pressure allowing passthrough for probe ${req.url} despite pressure of type ${type}`)
         } else {
           fastify.log.warn(`under pressure of type "${type}". returning 503 response`)
+          
           reply.serviceUnavailable('This service is currently overwhelmed. Try again later.')
         }
       }
-    } 
+    }
 
     fastify.register(up, opts)
   } else {
