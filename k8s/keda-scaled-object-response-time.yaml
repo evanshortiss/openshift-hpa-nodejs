@@ -1,0 +1,36 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: prom-scaled-response-time
+  namespace: hpa-nodejs
+spec:
+  scaleTargetRef:
+    name: hpa-nodejs
+    kind: Deployment
+  cooldownPeriod: 120
+  maxReplicaCount: 8
+  minReplicaCount: 2
+  pollingInterval: 5 
+  advanced:
+    restoreToOriginalReplicaCount: true 
+    horizontalPodAutoscalerConfig:
+      behavior: 
+        scaleDown:
+          stabilizationWindowSeconds: 120
+          policies:
+          - type: Percent
+            value: 20
+            periodSeconds: 60
+  triggers:
+  - type: prometheus 
+    metadata:
+      serverAddress: https://thanos-querier.openshift-monitoring.svc.cluster.local:9092
+      namespace: hpa-nodejs 
+      metricName: response_time
+      name: response_time
+      # Scale up if the response time for the home page is spiking above 25ms
+      threshold: '15'
+      query: avg(response_time{url="/",quantile="0.95"})
+      authModes: "bearer"
+    authenticationRef: 
+      name: keda-trigger-auth-prometheus

@@ -27,8 +27,8 @@ public class BurstyNodeSimulation extends Simulation {
     ChainBuilder getRandomBlocking = 
         repeat(2).on(
             exec(
-                http("GET /eventloop/block/?time=100")
-                    .get("/eventloop/block/?time=100")
+                http("GET /eventloop/block/?time=75")
+                    .get("/eventloop/block/?time=75")
                     .check(status().is(200))
             )
         );
@@ -48,10 +48,10 @@ public class BurstyNodeSimulation extends Simulation {
     {
         setUp(
          homePageUsers.injectOpen(
-                constantUsersPerSec(150).during(180)
+                constantUsersPerSec(10).during(180)
          ),
          expensiveOpUsers.injectOpen(
-                constantUsersPerSec(2).during(180)
+                constantUsersPerSec(10).during(180)
          )
         ).protocols(httpProtocol);
     }

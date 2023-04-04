@@ -1,14 +1,14 @@
 apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
 metadata:
-  name: prom-scaled-hpa-nodejs
+  name: prom-scaled-ell-nodejs
   namespace: hpa-nodejs
 spec:
   scaleTargetRef:
     name: hpa-nodejs
     kind: Deployment
   cooldownPeriod: 120
-  maxReplicaCount: 10
+  maxReplicaCount: 8
   minReplicaCount: 2
   pollingInterval: 5 
   advanced:
