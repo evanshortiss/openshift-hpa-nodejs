@@ -8,8 +8,8 @@ spec:
     kind: Deployment
     name: hpa-nodejs
     apiVersion: apps/v1
-  minReplicas: 2
-  maxReplicas: 5
+  minReplicas: 3
+  maxReplicas: 10
   metrics:
     - type: Resource
       resource:

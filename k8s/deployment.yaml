@@ -6,7 +6,7 @@ metadata:
     app.kubernetes.io/name: nodejs
   name: hpa-nodejs
 spec:
-  replicas: 2
+  replicas: 3
   selector:
     matchLabels:
       app: hpa-nodejs
